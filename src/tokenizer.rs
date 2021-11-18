@@ -48,39 +48,26 @@ impl<'a> Tokenizer<'a> {
 
     fn read_symbol(&mut self) -> (SymbolTy, Range<usize>) {
         let start_index = self.index;
-        let symbols = *SYMBOLS
+        let (symbols_str, ty) = SYMBOLS
             .iter()
-            .find(|&&symbol| self.remaining.starts_with(symbol))
+            .find(|symbol| self.remaining.starts_with(symbol.0))
             .expect("Not a proper symbol");
-        let symbol_length = symbols.len();
+        let symbol_length = symbols_str.len();
         self.increment_char(symbol_length);
         self.increment_col(symbol_length);
-        let ty = match symbols {
-            "+" => SymbolTy::Add,
-            "+=" => SymbolTy::AddAssign,
-            "(" => SymbolTy::OpParen,
-            ")" => SymbolTy::ClParen,
-            "{" => SymbolTy::OpBrace,
-            "}" => SymbolTy::ClBrace,
-            _ => todo!(),
-        };
-        (ty, start_index..self.index)
+        (*ty, start_index..self.index)
     }
 
     fn read_keyword(&mut self) -> (KeywordTy, Range<usize>) {
         let start_index = self.index;
-        let keyword = *KEYWORDS
+        let (keyword_str, ty) = KEYWORDS
             .iter()
-            .find(|&&keyword| self.remaining.starts_with(keyword))
-            .expect("Not a proper identifier");
-        let keyword_length = keyword.len();
+            .find(|keyword| self.remaining.starts_with(keyword.0))
+            .expect("Not a proper keyword");
+        let keyword_length = keyword_str.len();
         self.increment_char(keyword_length);
         self.increment_col(keyword_length);
-        let ty = match keyword {
-            "fn" => KeywordTy::Function,
-            _ => todo!(),
-        };
-        (ty, start_index..self.index)
+        (*ty, start_index..self.index)
     }
 
     fn increment_col(&mut self, n: usize) {
@@ -129,7 +116,7 @@ impl<'a> Tokenizer<'a> {
 
         if SYMBOLS
             .iter()
-            .any(|keyword| self.remaining.starts_with(keyword))
+            .any(|symbol| self.remaining.starts_with(symbol.0))
         {
             let symbol = self.read_symbol();
             return TokenResult::Token(Token {
@@ -140,7 +127,7 @@ impl<'a> Tokenizer<'a> {
 
         if KEYWORDS
             .iter()
-            .any(|keyword| self.remaining.starts_with(keyword))
+            .any(|keyword| self.remaining.starts_with(keyword.0))
         {
             let keyword = self.read_keyword();
             return TokenResult::Token(Token {

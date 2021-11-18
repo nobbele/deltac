@@ -2,14 +2,17 @@ use deltac::tokenizer::Tokenizer;
 
 fn main() {
     let input = r#"
-fn IAmAFunction() {
-    1 + 1 + 1 + ??
+fn IAmAFunction() -> int {
+    let a = 10;
+    if a > 5 {
+        a + 5
+    }
 }"#;
     let tokenizer = Tokenizer::new(input);
+    let mut tokens = Vec::new();
     for result in tokenizer {
         match result {
-            //Ok(token) => println!("Token: `{:?}`", token),
-            Ok(_) => {}
+            Ok(token) => tokens.push(token),
             Err(section) => {
                 if section.line.end != section.line.start {
                     println!(
