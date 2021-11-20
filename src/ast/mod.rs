@@ -32,8 +32,8 @@ pub enum Operation<'a> {
 
 #[derive(Debug, PartialEq)]
 pub struct Literal<'a> {
-    value: &'a str,
-    ty: PrimitiveTy,
+    pub value: &'a str,
+    pub ty: PrimitiveTy,
 }
 
 #[derive(Debug, PartialEq)]
@@ -114,7 +114,7 @@ impl<'a> Parser<'a> {
         Some(self.tokens.get(self.index)?.clone())
     }
 
-    fn parse_expression(&mut self) -> Expression<'a> {
+    pub fn parse_expression(&mut self) -> Expression<'a> {
         // TODO make this good
         let expr = match self.read_token().unwrap() {
             Token {
@@ -296,55 +296,5 @@ impl<'a> Parser<'a> {
             return_type,
             body,
         }
-    }
-}
-
-mod tests {
-    #[allow(unused_imports)]
-    use super::*;
-
-    #[test]
-    fn test_expression_1() {
-        let input = "12 + 2";
-        let tokens = crate::lexer::tokenizer::Tokenizer::new(input)
-            .collect::<Result<Vec<_>, _>>()
-            .unwrap();
-        let mut parser = Parser::new(input, &tokens);
-        let expr = parser.parse_expression();
-        assert_eq!(
-            expr,
-            Expression::Operation(Rc::new(Operation::Binary {
-                left: Expression::Literal(Literal {
-                    value: "12",
-                    ty: PrimitiveTy::Number,
-                }),
-                ty: BinaryOperationTy::Addition,
-                right: Expression::Literal(Literal {
-                    value: "2",
-                    ty: PrimitiveTy::Number,
-                }),
-            }))
-        );
-    }
-
-    #[test]
-    fn test_expression_2() {
-        let input = "abc + 2";
-        let tokens = crate::lexer::tokenizer::Tokenizer::new(input)
-            .collect::<Result<Vec<_>, _>>()
-            .unwrap();
-        let mut parser = Parser::new(input, &tokens);
-        let expr = parser.parse_expression();
-        assert_eq!(
-            expr,
-            Expression::Operation(Rc::new(Operation::Binary {
-                left: Expression::Variable("abc"),
-                ty: BinaryOperationTy::Addition,
-                right: Expression::Literal(Literal {
-                    value: "2",
-                    ty: PrimitiveTy::Number,
-                }),
-            }))
-        );
     }
 }
