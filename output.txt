@@ -1,0 +1,60 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/deltac`
+[src/main.rs:70] module = Module {
+    functions: [
+        Function {
+            name: "IAmAFunction",
+            arguments: [],
+            return_type: Some(
+                "int",
+            ),
+            body: [
+                Declaration {
+                    name: "a",
+                    expression: Literal(
+                        Literal {
+                            value: "10",
+                            ty: Number,
+                        },
+                    ),
+                },
+                ControlFlow(
+                    If {
+                        condition: Operation(
+                            Binary {
+                                left: Variable(
+                                    "a",
+                                ),
+                                ty: Greater,
+                                right: Literal(
+                                    Literal {
+                                        value: "5",
+                                        ty: Number,
+                                    },
+                                ),
+                            },
+                        ),
+                        body: [
+                            Expression(
+                                Operation(
+                                    Binary {
+                                        left: Variable(
+                                            "a",
+                                        ),
+                                        ty: Assignment,
+                                        right: Literal(
+                                            Literal {
+                                                value: "5",
+                                                ty: Number,
+                                            },
+                                        ),
+                                    },
+                                ),
+                            ),
+                        ],
+                    },
+                ),
+            ],
+        },
+    ],
+}

@@ -1,6 +1,9 @@
-use crate::token::{KeywordTy, LiteralTy, NumberTy, SymbolTy, Token, TokenTy, KEYWORDS, SYMBOLS};
 use itertools::Itertools;
 use std::ops::Range;
+
+use crate::{PrimitiveTy, TextSection};
+
+use super::token::{KeywordTy, SymbolTy, Token, TokenTy, KEYWORDS, SYMBOLS};
 
 enum TokenResult {
     Token(Token),
@@ -17,13 +20,6 @@ pub struct Tokenizer<'a> {
     pub index: usize,
 }
 
-#[derive(Debug, PartialEq)]
-pub struct TextSection {
-    pub index: Range<usize>,
-    pub line: Range<usize>,
-    pub column: Range<usize>,
-}
-
 impl<'a> Tokenizer<'a> {
     pub fn new(s: &str) -> Tokenizer {
         Tokenizer {
@@ -34,7 +30,7 @@ impl<'a> Tokenizer<'a> {
         }
     }
 
-    fn read_number(&mut self) -> (NumberTy, Range<usize>) {
+    fn read_number(&mut self) -> Range<usize> {
         let length = self
             .remaining
             .chars()
@@ -43,7 +39,7 @@ impl<'a> Tokenizer<'a> {
         let range = self.index..self.index + length;
         self.increment_col(length);
         self.remaining = &self.remaining[length..];
-        (NumberTy::Unspecified, range)
+        range
     }
 
     fn read_symbol(&mut self) -> (SymbolTy, Range<usize>) {
@@ -109,8 +105,8 @@ impl<'a> Tokenizer<'a> {
         if c.is_digit(10) {
             let number = self.read_number();
             return TokenResult::Token(Token {
-                range: number.1,
-                ty: TokenTy::Literal(LiteralTy::Number(number.0)),
+                range: number,
+                ty: TokenTy::Literal(PrimitiveTy::Number),
             });
         }
 
@@ -142,9 +138,10 @@ impl<'a> Tokenizer<'a> {
             .take_while(|&id_c| id_c.is_alphabetic() || id_c.is_numeric() || id_c == '_')
             .count();
         if identifier_length > 0 {
+            let start_index = self.index;
             self.increment_char(identifier_length);
             self.increment_col(identifier_length);
-            let range = self.index..self.index + identifier_length;
+            let range = start_index..start_index + identifier_length;
             return TokenResult::Token(Token {
                 range,
                 ty: TokenTy::Identifier,

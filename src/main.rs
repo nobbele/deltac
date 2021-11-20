@@ -1,11 +1,11 @@
-use deltac::tokenizer::Tokenizer;
+use deltac::lexer::tokenizer::Tokenizer;
 
 fn main() {
     let input = r#"
 fn IAmAFunction() -> int {
     let a = 10;
     if a > 5 {
-        a + 5
+        a = 5;
     }
 }"#;
     let tokenizer = Tokenizer::new(input);
@@ -65,4 +65,7 @@ fn IAmAFunction() -> int {
             }
         }
     }
+    let ast = deltac::ast::Parser::new(input, &tokens);
+    let module = ast.parse();
+    dbg!(module);
 }

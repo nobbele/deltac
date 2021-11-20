@@ -1,16 +1,7 @@
 use lazy_static::lazy_static;
 use std::{collections::HashMap, ops::Range};
 
-#[derive(Debug, PartialEq)]
-pub enum NumberTy {
-    U32,
-    Unspecified,
-}
-
-#[derive(Debug, PartialEq)]
-pub enum LiteralTy {
-    Number(NumberTy),
-}
+use crate::PrimitiveTy;
 
 lazy_static! {
     pub static ref SYMBOLS: HashMap<&'static str, SymbolTy> = {
@@ -62,15 +53,15 @@ pub enum KeywordTy {
     Return,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum TokenTy {
-    Literal(LiteralTy),
+    Literal(PrimitiveTy),
     Symbol(SymbolTy),
     Keyword(KeywordTy),
     Identifier,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub range: Range<usize>,
     pub ty: TokenTy,

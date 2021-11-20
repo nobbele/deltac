@@ -1,6 +1,9 @@
 use deltac::{
-    token::{KeywordTy, LiteralTy, NumberTy, SymbolTy, Token, TokenTy},
-    tokenizer::{TextSection, Tokenizer},
+    lexer::{
+        token::{KeywordTy, SymbolTy, Token, TokenTy},
+        tokenizer::Tokenizer,
+    },
+    PrimitiveTy, TextSection,
 };
 
 #[test]
@@ -11,7 +14,7 @@ fn basic_1() {
         &[
             Token {
                 range: 0..2,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             },
             Token {
                 range: 3..4,
@@ -19,7 +22,7 @@ fn basic_1() {
             },
             Token {
                 range: 5..6,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             }
         ]
     )
@@ -35,7 +38,7 @@ fn basic_2() {
         &[
             Token {
                 range: 0..2,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             },
             Token {
                 range: 3..4,
@@ -43,7 +46,7 @@ fn basic_2() {
             },
             Token {
                 range: 5..6,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             },
             Token {
                 range: 7..8,
@@ -51,7 +54,7 @@ fn basic_2() {
             },
             Token {
                 range: 8..9,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             }
         ]
     )
@@ -70,7 +73,7 @@ fn complex_1() {
                 ty: TokenTy::Keyword(KeywordTy::Function)
             },
             Token {
-                range: 9..15,
+                range: 3..9,
                 ty: TokenTy::Identifier
             },
             Token {
@@ -90,7 +93,7 @@ fn complex_1() {
                 ty: TokenTy::Keyword(KeywordTy::Let)
             },
             Token {
-                range: 20..21,
+                range: 19..20,
                 ty: TokenTy::Identifier
             },
             Token {
@@ -99,7 +102,7 @@ fn complex_1() {
             },
             Token {
                 range: 23..25,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             },
             Token {
                 range: 25..26,
@@ -110,7 +113,7 @@ fn complex_1() {
                 ty: TokenTy::Keyword(KeywordTy::If)
             },
             Token {
-                range: 32..33,
+                range: 31..32,
                 ty: TokenTy::Identifier
             },
             Token {
@@ -119,7 +122,7 @@ fn complex_1() {
             },
             Token {
                 range: 35..36,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             },
             Token {
                 range: 37..38,
@@ -150,7 +153,7 @@ fn function_1() {
                 ty: TokenTy::Keyword(KeywordTy::Function)
             },
             Token {
-                range: 15..27,
+                range: 3..15,
                 ty: TokenTy::Identifier
             },
             Token {
@@ -186,7 +189,7 @@ fn function_2() {
                 ty: TokenTy::Keyword(KeywordTy::Function)
             },
             Token {
-                range: 15..27,
+                range: 3..15,
                 ty: TokenTy::Identifier
             },
             Token {
@@ -202,7 +205,7 @@ fn function_2() {
                 ty: TokenTy::Symbol(SymbolTy::ThinArrow)
             },
             Token {
-                range: 24..27,
+                range: 21..24,
                 ty: TokenTy::Identifier
             },
             Token {
@@ -215,7 +218,7 @@ fn function_2() {
             },
             Token {
                 range: 34..35,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             },
             Token {
                 range: 35..36,
@@ -242,7 +245,7 @@ fn basic_invalid_1() {
             }),
             Ok(Token {
                 range: 3..5,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             }),
             Ok(Token {
                 range: 6..7,
@@ -250,7 +253,7 @@ fn basic_invalid_1() {
             }),
             Ok(Token {
                 range: 8..9,
-                ty: TokenTy::Literal(LiteralTy::Number(NumberTy::Unspecified))
+                ty: TokenTy::Literal(PrimitiveTy::Number)
             }),
             Err(TextSection {
                 index: 10..12,
