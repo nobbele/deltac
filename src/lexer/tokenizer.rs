@@ -90,6 +90,23 @@ impl<'a> Tokenizer<'a> {
             Some(o) => o,
             None => return TokenResult::End,
         };
+        if c == '#' {
+            if let Some(cr_idx) = self.remaining.find('\r') {
+                if let Some(nl_idx) = self.remaining.find('\n') {
+                    self.remaining = &self.remaining[nl_idx..];
+                    return TokenResult::Skip;
+                }
+                self.remaining = &self.remaining[cr_idx..];
+                return TokenResult::Skip;
+            } else {
+                if let Some(nl_idx) = self.remaining.find('\n') {
+                    self.remaining = &self.remaining[nl_idx..];
+                    return TokenResult::Skip;
+                }
+            }
+
+            return TokenResult::End;
+        }
         if c == ' ' || c == '\r' {
             self.remaining = &self.remaining[1..];
             self.increment_col(1);

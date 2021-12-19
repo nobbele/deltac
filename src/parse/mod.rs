@@ -43,6 +43,30 @@ pub enum Expression<'a> {
     Operation(Rc<Operation<'a>>),
 }
 
+impl<'a> Expression<'a> {
+    pub fn get_type(&self, f: &impl Fn(&str) -> PrimitiveTy) -> PrimitiveTy {
+        match self {
+            Expression::Variable(var) => f(var),
+            Expression::Literal(lit) => lit.ty,
+            Expression::Operation(op) => {
+                match &**op {
+                    Operation::Binary { left, ty, right } => {
+                        match ty {
+                            BinaryOperationTy::Addition => {
+                                let l_type = left.get_type(f);
+                                assert_eq!(l_type, right.get_type(f));
+                                l_type
+                            }
+                            BinaryOperationTy::Greater => PrimitiveTy::Boolean,
+                            BinaryOperationTy::Assignment => PrimitiveTy::Void,
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub enum ControlFlow<'a> {
     If {

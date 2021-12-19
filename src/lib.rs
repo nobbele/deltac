@@ -1,7 +1,8 @@
 use std::ops::Range;
 
-pub mod ast;
 pub mod lexer;
+pub mod parse;
+pub mod codegen;
 
 #[derive(Debug, PartialEq)]
 pub struct TextSection {
@@ -13,4 +14,6 @@ pub struct TextSection {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum PrimitiveTy {
     Number,
+    Boolean,
+    Void
 }

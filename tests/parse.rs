@@ -1,11 +1,11 @@
 use std::rc::Rc;
 
 use deltac::{
-    ast::{
+    lexer::tokenizer::Tokenizer,
+    parse::{
         BinaryOperationTy, ControlFlow, Expression, Function, Literal, Module, Operation, Parser,
         Statement,
     },
-    lexer::tokenizer::Tokenizer,
     PrimitiveTy,
 };
 
